@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('audio.static', filename='audio/styles.css') }}">
+    </head>
+    <body>
+
+        <div id="viz">
+            <canvas id="analyser" width="1024" height="500"></canvas>
+        </div>
+        <div id="controls">
+            <img id="record" src="{{ url_for('audio.static', filename='audio/mic128.png') }}" onclick="toggleRecording(this);">
+        </div>
+
+        <div class="message_holder"></div>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+        <script src="{{ url_for('audio.static', filename='audio/main.js') }}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+        <script type="text/javascript">
+          var socket = io.connect('http://192.168.43.236:5000');
+          var colors = [
+              '#2196F3', '#32c787', '#00BCD4', '#ff5652',
+              '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
+          ];
+          socket.on( 'connect', function() {
+            socket.emit( 'my event', {
+              data: 'User Connected'
+            } )
+            var form = $( 'form' ).on( 'submit', function( e ) {
+              e.preventDefault()
+              let user_name = $( 'input.username' ).val()
+              let user_input = $( 'input.message' ).val()
+              socket.emit( 'my event', {
+                user_name : user_name,
+                message : user_input
+              } )
+              $( 'input.message' ).val( '' ).focus()
+            } )
+          } )
+          socket.on( 'my response', function( msg ) {
+            console.log( msg )
+            var messageElement = document.createElement('li');
+
+            if( msg.user_name == 'yusuf' ) {
+              messageElement.classList.add('chat-message');
+              var avatarElement = document.createElement('i');
+              var avatarText = document.createTextNode(message.sender[0]);
+              avatarElement.appendChild(avatarText);
+              avatarElement.style['background-color'] = getAvatarColor(message.sender);
+
+              messageElement.appendChild(avatarElement);
+              var usernameElement = document.createElement('span');
+              var usernameText = document.createTextNode(message.sender);
+              usernameElement.appendChild(usernameText);
+              messageElement.appendChild(usernameElement);
+
+
+              $( 'h3' ).remove()
+              $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+            }
+          })
+
+
+
+          function getAvatarColor(messageSender) {
+              var hash = 0;
+              for (var i = 0; i < messageSender.length; i++) {
+                  hash = 31 * hash + messageSender.charCodeAt(i);
+              }
+
+              var index = Math.abs(hash % colors.length);
+              return colors[index];
+          }
+
+
+        </script>
+
+
+
+    </body>
+</html>

@@ -1,0 +1,47 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <title>Chat App</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+  </head>
+  <body>
+
+  <div class="image_window">
+  <img id="bg" src="{{ url_for('video_feed') }}">
+   
+  </div>
+
+
+
+    <div class="chat_window">
+
+
+
+        
+      <div class="top_menu">
+        <div class="title">
+          Chat
+        </div>
+      </div>
+      <ul class="messages"></ul>
+      
+    </div>
+    <div class="message_template">
+      <li class="message">
+        <div class="avatar"></div>
+        <div class="text_wrapper">
+          <div class="text"></div>
+        </div>
+      </li>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script src="/static/js/script.js"></script>
+    <script type="text/javascript">
+     
+    </script>
+
+  </body>
+  </html>
